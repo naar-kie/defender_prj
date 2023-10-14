@@ -1,0 +1,36 @@
+### CMake ###
+build
+
+### CodeBlocks ###
+*.cbp
+*.depend
+*.layout
+bin/
+obj/
+
+### VisualStudioCode ###
+.vscode
+*.code-workspace
+.history
+
+### Xcode ###
+xcuserdata/
+*.xcscmblueprint
+*.xccheckout
+*.xcodeproj/*
+**/xcshareddata/WorkspaceSettings.xcsettings
+
+### Linux ###
+*.o 
+*.a
+
+### CodeLite ###
+*.mk
+*.project
+*.workspace
+compile_commands.json
+Makefile
+.codelite/
+
+### macOS ###
+*.DS_Store
