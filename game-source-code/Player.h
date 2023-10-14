@@ -28,16 +28,17 @@ namespace defender
         void shoot();
 
         bool moveUp = 0, moveDown = 0, moveLeft = 0, moveRight = 0; // mine
-
+        sf::Vector2f movement;
+        float shipSpeed = 350.f;
 
     private:
-        float shipSpeed = 350.f;
+        
         int _rotation;
         int direction;
         bool facedRight = true;
         bool facedLeft = false;
         sf::Time _timeSinceLastShoot;
-        sf::Vector2f movement;
+        
 
         virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
     };
