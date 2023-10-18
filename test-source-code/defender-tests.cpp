@@ -1,7 +1,6 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest.h"
 
-
 #include "../game-source-code/Action.h"
 #include "../game-source-code/ActionMap.h"
 #include "../game-source-code/ActionTarget.h"
@@ -13,88 +12,176 @@
 #include "../game-source-code/Player.h"
 #include "../game-source-code/Pod.h"
 #include "../game-source-code/ResourceHandler.h"
+#include "../game-source-code/World.h"
+#include "../game-source-code/Utilities.h"
+#include "../game-source-code/MockEntity.h"
 
 #include <SFML/Graphics.hpp>
 #include <vector>
-
-namespace defender {
-    // Simple manual mock for the World class
-    class MockWorld : public World {
-    public:
-        MockWorld(int width, int height, sf::Vector2f initialPlayerPosition)
-            : World(width, height) {
-            // Create and add the player entity to the world with the initial position
-            Player* player = new Player(*this);
-            player->setPosition(initialPlayerPosition);
-            add(player);
-        }
-
-        // Override the add method to provide mock behavior
-        void add(Entity* entity)  {
-            // Mock the add behavior here, e.g., store the entity for later inspection
-            // You can add your custom behavior as needed for testing.
-        }
-    };
-}
-
-// TEST_CASE("Player movement up test") {
-//     SUBCASE("Player moves up when 'Up' input is triggered") {
-//         // Set the initial position for the player
-//         sf::Vector2f initialPlayerPosition(400.0f, 500.0f);
-
-//         // Create a mock world with the initial player position
-//         defender::MockWorld world(800, 600, initialPlayerPosition);
-
-//         // Create a Player instance with the mock world
-//         defender::Player player(world);
-
-//         // Simulate the "Up" input event
-//         sf::Event upEvent;
-//         upEvent.type = sf::Event::KeyPressed;
-//         upEvent.key.code = sf::Keyboard::Up;
-
-//         // Call the player's event handler to process the key press event
-//         player.processEvents();
-
-//         // Update the player's position (assuming a small time increment)
-//         player.update(sf::seconds(0.1));  // Adjust delta time as needed
-
-//         // Get the player's updated position
-//         sf::Vector2f updatedPosition = player.getPosition();
-
-//         // Check that the player has moved upwards (y-coordinate decreased)
-//         CHECK(updatedPosition.y < 0.0);  // Adjust the expected position as needed
-//     }
-// }
-
-
 using namespace defender;
 
+
+//////////WORLD CLASS/////////////////
+TEST_CASE("World creation") {
+    defender::World world(800, 600);
+    CHECK(world.getWidth() == 800);
+    CHECK(world.getHeight() == 600);
+    CHECK(world.size() == 0);
+}
+//________________________________________________//
+
+
+//////////ACTION CLASS/////////////////
+TEST_CASE("Action constructors and equality") {
+    SUBCASE("Equality operator with an Event") {
+        defender::Action action(sf::Keyboard::A, defender::Action::Type::Pressed);
+        sf::Event event;
+        event.type = sf::Event::KeyPressed;
+        event.key.code = sf::Keyboard::A;
+
+        CHECK(action == event); // The event matches the key and type set in the action
+    }
+}
+//________________________________________________//
+
+
+//////////RESOURCEHANDLER CLASS (Good Graphics Test - minor)/////////////////
+TEST_CASE("ResourceHandler loading and retrieval (using Spaceship)") {
+    defender::ResourceHandler<sf::Texture, int> textureHandler;
+    textureHandler.load(1, "resources/Spaceship.png");
+
+    SUBCASE("Check if this texture is loadedLoad a texture") {
+        CHECK_NOTHROW(textureHandler.get(1));
+    }
+
+    SUBCASE("Retrieve a loaded texture by confirming it's size with required size") {
+        sf::Texture& texture = textureHandler.get(1);
+        CHECK(texture.getSize() == sf::Vector2u(64, 64));
+    }
+
+    SUBCASE("Retrieve a non-existing resource") {
+        // Make sure trying to retrieve a non-existing resource throws an exception.
+        CHECK_THROWS(textureHandler.get(2));
+    }
+}
+
+TEST_CASE("Alien Missile loading and retrieval ") {
+    defender::ResourceHandler<sf::Texture, int> textureHandler;
+    textureHandler.load(1, "resources/AlienMissile.png");
+    
+    SUBCASE("Check if this texture is loadedLoad a texture") {
+        CHECK_NOTHROW(textureHandler.get(1));
+    }
+
+    SUBCASE("Retrieve a loaded texture by confirming it's size with required size") {
+        sf::Texture& texture = textureHandler.get(1);
+        CHECK(texture.getSize() == sf::Vector2u(13, 54));
+    }
+}
+
+TEST_CASE("Lander loading and retrieval ") {
+    defender::ResourceHandler<sf::Texture, int> textureHandler;
+    textureHandler.load(1, "resources/Enemy1.png");
+    
+    SUBCASE("Check if this texture is loadedLoad a texture") {
+        CHECK_NOTHROW(textureHandler.get(1));
+    }
+
+    SUBCASE("Retrieve a loaded texture by confirming it's size with required size") {
+        sf::Texture& texture = textureHandler.get(1);
+        CHECK(texture.getSize() == sf::Vector2u(64, 64));
+    }
+}
+
+TEST_CASE("Laser loading and retrieval ") {
+    defender::ResourceHandler<sf::Texture, int> textureHandler;
+    textureHandler.load(1, "resources/PlayerLaser.png");
+    
+    SUBCASE("Check if this texture is loadedLoad a texture") {
+        CHECK_NOTHROW(textureHandler.get(1));
+    }
+
+    SUBCASE("Retrieve a loaded texture by confirming it's size with required size of Laser") {
+        sf::Texture& texture = textureHandler.get(1);
+        CHECK(texture.getSize() == sf::Vector2u(3, 32));
+    }
+}
+
+TEST_CASE("Pod loading and retrieval ") {
+    defender::ResourceHandler<sf::Texture, int> textureHandler;
+    textureHandler.load(1, "resources/podAlien.png");
+    
+    SUBCASE("Check if this texture is loadedLoad a texture") {
+        CHECK_NOTHROW(textureHandler.get(1));
+    }
+
+    SUBCASE("Retrieve a loaded texture by confirming it's size with required size of Pod") {
+        sf::Texture& texture = textureHandler.get(1);
+        CHECK(texture.getSize() == sf::Vector2u(99, 70));
+    }
+}
+
+TEST_CASE("Swarmer loading and retrieval ") {
+    defender::ResourceHandler<sf::Texture, int> textureHandler;
+    textureHandler.load(1, "resources/swarmer.png");
+    
+    SUBCASE("Check if this texture is loadedLoad a texture") {
+        CHECK_NOTHROW(textureHandler.get(1));
+    }
+
+    SUBCASE("Retrieve a loaded texture by confirming it's size with required size of Swarmer") {
+        sf::Texture& texture = textureHandler.get(1);
+        CHECK(texture.getSize() == sf::Vector2u(66, 66));
+    }
+}
+
+
+//________________________________________________//
+
+
+//////////UTILITIES CLASS/////////////////
+TEST_CASE("Random number generation") {
+    defender::Utilities::initialize();
+    int randomInt = defender::Utilities::random(1, 10);
+    CHECK(randomInt >= 1);
+    CHECK(randomInt <= 10);
+
+    float randomFloat = defender::Utilities::random(1.0f, 10.0f);
+    CHECK(randomFloat >= 1.0f);
+    CHECK(randomFloat <= 10.0f);
+}
+//________________________________________________//
+
+
+//      ---Object Testing (Movement and Collision)---      //
+
+//////////PLAYER CLASS (Spaceship)/////////////////
 TEST_CASE("Player Movements")
 {
     defender::Setup::initialize();
     defender::Game game;
-    //game.run();
     defender::Player player(*new defender::World(800, 600));
     player.setPosition(200,200);
 
-    sf::Keyboard::Key key = sf::Keyboard::A;
-        int type = defender::Action::Type::Pressed;
-        defender::Action action(key, type);
+        // sf::Keyboard::Key key = sf::Keyboard::A;
+        // int type = defender::Action::Type::Pressed;
+        // defender::Action action(key, type);
 
     SUBCASE("Move Up")
     {
         defender::Action action1(sf::Keyboard::Up, defender::Action::Type::Pressed);
-        // Simulate the 'Up' key press event
-        sf::Event upKeyEvent;
-        upKeyEvent.type = sf::Event::KeyPressed;
-        upKeyEvent.key.code = sf::Keyboard::Up;
-        player.processEvent(upKeyEvent);
+        player.moveUp = true;
+        player.movement.y -= player.shipSpeed;
         
-        //player.moveUp = true;
-        //player.movement.y -= player.shipSpeed;
-        player.update(sf::seconds(0.1)); // Assuming a small time increment
+        //player._actionMap
+        //sf::Event event;
+        //event.type = sf::Event::KeyPressed;
+        //event.key.code = sf::Keyboard::Up;
+        //defender::Setup::player->processEvent(event);
+        
         player.processEvents();
+        player.update(sf::seconds(0.1)); // Assuming a small time increment
+        
         CHECK(player.getPosition().y < 200); // Check if player moved up (Y position decreased)
     }
 
@@ -119,45 +206,28 @@ TEST_CASE("Player Movements")
 
     SUBCASE("Move Right")
     {
+        sf::Vector2f initialPos= player.getPosition();
         player.moveRight = true;
         player.movement.x += player.shipSpeed;
         player.update(sf::seconds(0.1)); // Assuming a small time increment
-        CHECK(player.getPosition().x > 200); // Check if player moved right (X position increased)
+        sf::Vector2f newPos= player.getPosition();
+        CHECK(newPos.x > initialPos.x); // Check if player moved right (X position increased)
     }
+
+    // NEED TO DO COLLITIONS TESTS
 }
+//________________________________________________//
 
 
-//////////////////////
+//////////LANDER CLASS(Landers)/////////////////
 
-// TEST_CASE("Action constructors and equality") {
-//     SUBCASE("Equality operator with an Event") {
-//         defender::Action action(sf::Keyboard::A, defender::Action::Type::Pressed);
-//         sf::Event event;
-//         event.type = sf::Event::KeyPressed;
-//         event.key.code = sf::Keyboard::A;
-
-//         CHECK(action == event); // The event matches the key and type set in the action
-//     }
-// }
+//________________________________________________//
 
 
-// ////////////////////////////////////
+//////////SHOOT CLASS (Lasers and Missiles)/////////////////
 
-// TEST_CASE("ResourceHandler loading and retrieval") {
-//     defender::ResourceHandler<sf::Texture, int> textureHandler;
-//     textureHandler.load(1, "resources/Spaceship.png");
-//     SUBCASE("Check if this texture is loadedLoad a texture") {
-//         //textureHandler.load(1, "resources/Spaceship.png");
-//         CHECK_NOTHROW(textureHandler.get(1));
-//     }
+//________________________________________________//
 
-//     SUBCASE("Retrieve a loaded texture by confirming it's size with required size") {
-//         sf::Texture& texture = textureHandler.get(1);
-//         CHECK(texture.getSize() == sf::Vector2u(64, 64));
-//     }
+//////////POD CLASS(Pod and Swarmers)/////////////////
 
-//     SUBCASE("Retrieve a non-existing resource") {
-//         // Make sure trying to retrieve a non-existing resource throws an exception.
-//         CHECK_THROWS(textureHandler.get(2)); // Adjust this to your class's behavior.
-//     }
-// }
+//________________________________________________//
