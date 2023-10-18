@@ -5,7 +5,7 @@ namespace defender
 {
     // sets the texture to sf::sprite function and center it's origin
     Entity::Entity(Setup::Textures textureID, World &world) : _world(world), _alive(true)
-    { 
+    {
         sf::Texture &texture = Setup::textures.get(textureID);
         texture.isSmooth();
         _sprite.setTexture(texture);

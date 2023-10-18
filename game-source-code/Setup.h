@@ -1,3 +1,8 @@
+/**
+ * @file Setup.h
+ *
+ * Defines game setup configurations and resources.
+ */
 #ifndef SETUP_H
 #define SETUP_H
 
@@ -7,12 +12,23 @@
 
 namespace defender
 {
+    /**
+     * @class Setup
+     * @brief Handles game setup configurations and resources.
+     * The Setup class handles initialization, resource loading, player setup, and scoring mechanics.
+
+     */
     extern sf::Text _highScoreText;
 
     class Player;
     class Setup
     {
     public:
+        // ... public member functions and variables ...
+
+        /**
+         * @brief Initializes game resources and settings.
+         */
         /**
          * This c++11 feature lets us delete the constructor, copy constructor and operator,
          * which makes this class non-copyable.
@@ -61,28 +77,57 @@ namespace defender
 
         static defender::Player *player;
         static int level;
+        static int swarmersKilled;
         static int lives;
-
+        static int maxLanders;
+        static int landersDestroyed;
+ /**
+         * @brief Initializes game resources and configurations.
+         */
         static void initialize();
+        /**
+         * @brief Resets game variables to default values.
+         */
         static void reset();
 
         static bool isGameOver();
+        /**
+         * @brief Adds score to the player's total score.
+         * @param s Score to be added.
+         */
         static void addScore(int s);
+        /**
+         * @brief Gets the current player's score.
+         * @return Current player's score.
+         */
         static int getScore();
+        /**
+         * @brief Draws the player's score and remaining lives on the screen.
+         * @param target Render target to draw on.
+         */
 
         static void draw(sf::RenderTarget &target);
         static int _score;
-
+        // ... public member functions and variables ...
 
     private:
         static sf::Text _scoreText;
         static sf::Sprite _lifeSprite;
 
+        /**
+         * @brief Initializes font resources for the game.
+         */
         static void initFonts();
+        /**
+         * @brief Initializes texture resources for the game.
+         */
         static void initTextures();
 
         static int _highScore;
 
+        /**
+         * @brief Initializes player input mappings for the game.
+         */
         static void initPlayerInputs();
     };
 }

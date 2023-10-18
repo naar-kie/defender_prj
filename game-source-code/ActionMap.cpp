@@ -1,4 +1,6 @@
 #include "ActionMap.h"
+#include <iostream>
+#include <stdexcept>
 
 namespace defender
 {
@@ -11,7 +13,8 @@ namespace defender
     template<typename T>
     const Action &ActionMap<T>::get(const T &key) const
     {
-        return _map.at(key);
+        auto it = _map.find(key);
+        return it->second;
     }
 
 // Declaring a template type allows implementation to be in a separate (.cpp) file

@@ -8,7 +8,7 @@ namespace defender
     class Action
     {
     public:
-        // Enum to be used as flags
+        // Enum flags to be used by the constructors
         enum Type
         {
             RealTime = 1,
@@ -30,8 +30,14 @@ namespace defender
          * sf::Event.type to Pressed.
          */
         Action(const sf::Keyboard::Key &key, int type = Type::RealTime | Type::Pressed);
-
-        bool test() const;
+        
+        /**
+         * @brief functionality to check if the internal sf::Event instance is executed.
+         * 
+         * @return true if the instance has been executed
+         * @return false otherwise
+         */
+        bool test() const; // functionality to check if the internal sf::Event instance is executed.
 
         /**
          * Because _event is always Pressed, this will compare Action._type to the flags

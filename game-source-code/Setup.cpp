@@ -10,7 +10,9 @@ namespace defender
 
     ActionMap<int> Setup::playerInputs;
     int Setup::level;
+    int Setup::maxLanders;
     int Setup::lives;
+    int Setup::swarmersKilled;
 
     Player *Setup::player = nullptr;
 
@@ -49,6 +51,8 @@ namespace defender
         level = 1;
         lives = 0;
         _score = 0;
+        swarmersKilled = 0;
+        maxLanders = 5; // initialize maximum number of Landers
         _scoreText.setString("0");
 
     }

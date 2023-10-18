@@ -5,6 +5,7 @@
 #include "Utilities.h"
 #include "Lander.h"
 #include "Shoot.h"
+#include "World.h"
 #include <cmath>
 
 namespace defender
@@ -32,6 +33,7 @@ namespace defender
         float speed= 100.f;
             // Move the Pod towards the Player
             _sprite.move(direction * speed * deltaTime.asSeconds());
+            //_sprite.rotate(_rotation);
         }
     }
 
@@ -51,7 +53,7 @@ namespace defender
     void BigPod::onDestroy()
     {
         Pod::onDestroy();
-        int sm = 3; // Number of Swarmers to spawn
+        int sm = 4; // Number of Swarmers to spawn
 
         for (int i = 0; i < sm; ++i)
         {
@@ -68,25 +70,36 @@ namespace defender
 
         //set a smaller scale for swarmers
         _sprite.setScale(0.5f, 0.5f);
+        _impulse *= 600.f;
+        _rotation = Utilities::random(0.075f, 0.1f);
 
     }
 
     void Swarmer::update(sf::Time deltaTime)
     {
-        if (Setup::player) {
-        sf::Vector2f playerPosition = Setup::player->getPosition();
-        sf::Vector2f direction = playerPosition - _sprite.getPosition();
-        float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
+        int noSwarm = Setup::swarmersKilled;
+        if(noSwarm == 0){
+            float seconds = deltaTime.asSeconds();
+            _sprite.move(seconds * _impulse);
+            _sprite.rotate(_rotation);
+        }
+        else{
+            if (Setup::player) {
+            sf::Vector2f playerPosition = Setup::player->getPosition();
+            sf::Vector2f direction = playerPosition - _sprite.getPosition();
+            float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
 
-        if (length != 0) {
-            direction /= length;
+            if (length != 0) {
+                direction /= length;
+            }
+
+            float speed= 500.f;
+            // Move the Pod towards the Player
+            _sprite.move(direction * speed * deltaTime.asSeconds());
+            }
         }
 
-        float speed= 300.f;
-        // Move the Pod towards the Player
-        _sprite.move(direction * speed * deltaTime.asSeconds());
-
-        }
+        
     }
 
     int Swarmer::getPoints() const
@@ -96,6 +109,7 @@ namespace defender
 
     void Swarmer::onDestroy()
     {
-        Pod::onDestroy();
+                Pod::onDestroy();
+                Setup::swarmersKilled+=1;
     }
 }

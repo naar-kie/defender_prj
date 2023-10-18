@@ -12,12 +12,13 @@
 #include "Game.h"
 
 /**
- * @brief The main function, the entry point for the program.
+ * @brief The main function, the entry point for the Game.
  *
  * This function initializes the game and starts its execution.
  *
  * @return An integer value representing the exit status (0 for success).
  */
+
 int main()
 {
     defender::Setup::initialize();
@@ -26,4 +27,6 @@ int main()
     game.run();
 
     return 0;
+
 }
+

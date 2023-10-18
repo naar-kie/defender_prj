@@ -11,8 +11,9 @@ namespace defender
     {
     public:
         /**
-         * This c++11 feature lets us delete the copy constructor and operator,
-         * which makes this class non-copyable. Only want one game.
+         * This feature lets us delete the copy constructor and operator,
+         * which makes this class non-copyable. We only want one game.
+         * We tell to the compiler to not build the default function
          */
         Game(const Game &) = delete;
         Game &operator=(const Game &) = delete;

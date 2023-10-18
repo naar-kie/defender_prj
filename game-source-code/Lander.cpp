@@ -9,7 +9,6 @@
 
 namespace defender
 {
-    int Lander::landersDestroyed = 0;
 
     bool Lander::isCollide(const Entity &other) const
     {
@@ -64,7 +63,7 @@ namespace defender
     void Lander::onDestroy()
     {
         Enemy::onDestroy();
-        landersDestroyed++;
+        Setup::maxLanders--;
     }
 
     // This function will randomly create a Lander depending on the player's score and add it to the world

@@ -7,6 +7,7 @@
 
 namespace defender
 {
+    // initialize the window and the world
     Game::Game(unsigned int width, unsigned int height)
             : _window(sf::VideoMode(width, height), "Defender Game"), _world(width, height)
     {
@@ -24,17 +25,17 @@ namespace defender
         std::srand(static_cast<unsigned>(std::time(nullptr))); // Seed the random number generator
     }
 
-    void Game::run(int minFPS)
+    void Game::run(int minFPS) // run the game as quickly as possible by ensuring the time parameter passed in the Game::update() method is not too high
     {
         sf::Clock clock;
         sf::Time lastStep;
-        sf::Time fixedStep = sf::seconds(1.f / minFPS);
+        sf::Time fixedStep = sf::seconds(1.f / minFPS); // fixed timeSteps for all events
 
         // Implements the "Minimum time step" model
         // Game runs as fast as it can, passing last delta to update()
         while (_window.isOpen())
         {
-            processEvents();
+            processEvents(); 
             lastStep = clock.restart();
             while (lastStep > fixedStep)
             {
@@ -46,37 +47,14 @@ namespace defender
         }
     }
 
-    void Game::initLevel()
-    {
-        int Pods;
-        switch (Setup::level)
+    void Game::initLevel(){
+        Pod *Pod = new BigPod(_world);
+        do
         {
-            case 1:
-                Pods = 1;
-                break;
-            case 2:
-                Pods = 1;
-                break;
-            case 3:
-                Pods = 1;
-                break;
-            case 4:
-                Pods = 1;
-                break;
-            default:
-                Pods = 1;
-                break;
-        }
-        for (int i = 0; i < Pods; ++i)
-        {
-            Pod *Pod = new BigPod(_world);
-            do
-            {
-                Pod->setPosition(Utilities::random(0.f, (float) _world.getWidth()),
-                                    Utilities::random(0.f, (float) _world.getHeight()));
-            } while (_world.isCollide(*Pod));
-            _world.add(Pod);
-        }
+            Pod->setPosition(Utilities::random(0.f, (float) _world.getWidth()),
+                                Utilities::random(0.f, (float) _world.getHeight()));
+        } while (_world.isCollide(*Pod));
+        _world.add(Pod);
     }
 
     void Game::processEvents()
@@ -93,6 +71,7 @@ namespace defender
                     if (event.key.code == sf::Keyboard::Escape)
                         _window.close();
                     if (Setup::isGameOver() && event.key.code == sf::Keyboard::Enter)
+                        // DO FOR isGameWon();
                         reset();
                 default:
                     break;
@@ -104,7 +83,7 @@ namespace defender
             Setup::player->processEvents();
     }
 
-    void Game::update(sf::Time deltaTime)
+    void Game::update(sf::Time deltaTime) // elapsed since the last call of Game.update
     {
         if (!Setup::isGameOver())
         {
@@ -118,8 +97,14 @@ namespace defender
             }
             _nextLander -= deltaTime;
 
-            if (_nextLander < sf::Time::Zero)
+            if (_nextLander < sf::Time::Zero && Setup::maxLanders > 0)
             {
+                int sm = Setup::maxLanders;
+                for (int i = 0; i < sm; ++i)
+                {
+                    Lander::newLander(_world);
+                    Setup::maxLanders--;
+                }
                 Lander::newLander(_world);
                 _nextLander = sf::seconds(Utilities::random(10.f, 60.f - Setup::level * 2));
             }
@@ -127,6 +112,8 @@ namespace defender
             if (_world.size() <= 1)
             {
                 ++Setup::level;
+    
+                Setup::lives = -1;  // ~ use GameWon Splash Screen implementation
                 initLevel();
             }
         }
