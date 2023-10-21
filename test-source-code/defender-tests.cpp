@@ -14,7 +14,6 @@
 #include "../game-source-code/ResourceHandler.h"
 #include "../game-source-code/World.h"
 #include "../game-source-code/Utilities.h"
-#include "../game-source-code/MockEntity.h"
 
 #include <SFML/Graphics.hpp>
 #include <vector>
