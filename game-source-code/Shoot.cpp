@@ -36,7 +36,7 @@ namespace defender
 /********** SHOOT PLAYER **********/
     ShootPlayer::ShootPlayer(Player &from) : Shoot(Setup::Textures::ShootPlayer, from._world)
     {
-        _duration = sf::seconds(2);
+        _duration = sf::seconds(3);
         float angle = from._sprite.getRotation() / 180 * M_PI - M_PI_2;
         _impulse = sf::Vector2f(std::cos(angle), std::sin(angle)) * 500.f;
         setPosition(from.getPosition());
@@ -74,7 +74,7 @@ namespace defender
 
     bool ShootLander::isCollide(const Entity &other) const
     {
-        return (dynamic_cast<const Player *>(&other) || dynamic_cast<const Pod *>(&other)) &&
+        return (dynamic_cast<const Player *>(&other)) &&
                Collision::circleTest(_sprite, other._sprite);
     }
 }

@@ -10,33 +10,27 @@ namespace defender
 
     ActionMap<int> Setup::playerInputs;
     int Setup::level;
-    int Setup::maxLanders;
+    int Setup::maxLanders = 5;
     int Setup::lives;
-    int Setup::swarmersKilled;
+    int Setup::swarmersKilled = 0;
 
     Player *Setup::player = nullptr;
 
     int Setup::_score;
     sf::Text Setup::_scoreText;
-    sf::Sprite Setup::_lifeSprite;
 
     int Setup::_highScore = 0;
     sf::Text _highScoreText;
 
-
     void Setup::initialize()
     {
         Utilities::initialize();
-
         initFonts();
         initTextures();
-
         initPlayerInputs();
 
         _scoreText.setFont(fonts.get(Fonts::Sansation));
         _scoreText.setCharacterSize(24);
-
-        _lifeSprite.setTexture(textures.get(Textures::PlayerLife));
 
         lives = level = _score = -1;
 
@@ -53,13 +47,17 @@ namespace defender
         _score = 0;
         swarmersKilled = 0;
         maxLanders = 5; // initialize maximum number of Landers
-        _scoreText.setString("0");
-
+        _scoreText.setString("Score: 0");
     }
 
     bool Setup::isGameOver()
     {
         return lives < 0;
+    }
+
+    bool Setup::isGameWon()
+    {
+        return maxLanders == 0;
     }
 
     void Setup::addScore(int s)
@@ -70,7 +68,7 @@ namespace defender
             _highScore = _score; // Update the high score if the current score is higher
         }
         lives += _score / 10000 - old / 10000;
-        _scoreText.setString(std::to_string(_score));
+        _scoreText.setString("Score: " + std::to_string(_score));
         _highScoreText.setString("High Score: " + std::to_string(_highScore));
     }
 
@@ -83,12 +81,7 @@ namespace defender
     {
         target.draw(_scoreText);
         for (int i = 0; i < lives; ++i)
-        {
-            _lifeSprite.setPosition(40 * i, 40);
-            target.draw(_lifeSprite);
-        }
         target.draw(_highScoreText);
-
     }
 
     void Setup::initFonts()
@@ -98,13 +91,12 @@ namespace defender
 
     void Setup::initTextures()
     {
-        textures.load(Textures::Player, "resources/Spaceship.png");
-        textures.load(Textures::PlayerLife, "resources/life.png");
-        textures.load(Textures::ShootPlayer, "resources/PlayerLaser.png");
-
         textures.load(Textures::lander, "resources/Enemy1.png");
         textures.load(Textures::ShootLander, "resources/AlienMissile.png");
 
+        textures.load(Textures::Player, "resources/Spaceship.png");
+        textures.load(Textures::ShootPlayer, "resources/PlayerLaser.png");
+        
         textures.load(Textures::BigPod1, "resources/podAlien.png");
         textures.load(Textures::BigPod2, "resources/podAlien.png");
         textures.load(Textures::BigPod3, "resources/podAlien.png");

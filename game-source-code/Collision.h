@@ -1,7 +1,7 @@
 /**
  * @file Collision.h
  *
- * Provides collision detection functions.
+ * @brief Provides collision detection functions.
  */
 #ifndef COLLISION_H
 #define COLLISION_H
@@ -33,4 +33,4 @@ namespace defender
     };
 }
 
-#endif
+#endif // class adapted from iZastic on 27/09/2023, Created on 11/8/2015.

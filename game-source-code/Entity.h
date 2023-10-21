@@ -1,6 +1,11 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
+/**
+ * @file Game.h
+ * @brief Class that mangages all the game logic
+ */
+
 #include <SFML/Graphics.hpp>
 #include "Setup.h"
 

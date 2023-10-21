@@ -1,6 +1,11 @@
 #ifndef GAME_H
 #define GAME_H
 
+/**
+ * @file Game.h
+ * @brief Class that mangages all the game logic
+ */
+
 #include <SFML/Graphics.hpp>
 #include "World.h"
 #include <ctime>

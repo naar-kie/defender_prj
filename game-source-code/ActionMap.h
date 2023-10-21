@@ -51,4 +51,4 @@ namespace defender
     };
 }
 
-#endif
+#endif // class adapted from iZastic on 27/09/2023, Created on 11/8/2015.

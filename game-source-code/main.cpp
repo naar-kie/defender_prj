@@ -5,7 +5,6 @@
  * @version 3.0
  * @date 2023-10-12
  * 
- * @copyright Copyright (c) 2023
  * 
  */
 
@@ -19,6 +18,8 @@
  * @return An integer value representing the exit status (0 for success).
  */
 
+//using namespace defender;
+
 int main()
 {
     defender::Setup::initialize();
@@ -29,4 +30,3 @@ int main()
     return 0;
 
 }
-

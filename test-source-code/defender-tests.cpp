@@ -225,6 +225,15 @@ TEST_CASE("Player Movements")
 
 
 //////////SHOOT CLASS (Lasers and Missiles)/////////////////
+TEST_CASE("Enemy Bullet Collide with Player"){
+    Setup::initialize();
+    Game game;
+    Player player(*new World(800, 600));
+    player.setPosition(200,200);
+
+    Lander::newLander(*new World(800, 600));
+    
+}
 
 //________________________________________________//
 

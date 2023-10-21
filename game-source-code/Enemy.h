@@ -1,6 +1,11 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
+/**
+ * @file Enemy.h
+ * @brief Base class for all enemy/Allien Entites
+ */
+
 #include "Entity.h"
 
 namespace defender
@@ -22,4 +27,4 @@ namespace defender
     };
 }
 
-#endif
+#endif // class adapted from iZastic on 27/09/2023, Created on 11/8/2015.

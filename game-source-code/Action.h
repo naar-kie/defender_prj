@@ -30,10 +30,10 @@ namespace defender
          * sf::Event.type to Pressed.
          */
         Action(const sf::Keyboard::Key &key, int type = Type::RealTime | Type::Pressed);
-        
+
         /**
          * @brief functionality to check if the internal sf::Event instance is executed.
-         * 
+         *
          * @return true if the instance has been executed
          * @return false otherwise
          */

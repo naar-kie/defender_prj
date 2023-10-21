@@ -3,7 +3,7 @@
 #include "Lander.h"
 #include "Player.h"
 #include "Utilities.h"
-
+#include <fstream>
 
 namespace defender
 {
@@ -17,7 +17,7 @@ namespace defender
                            "The landers appear as alien spaceship and will fire missiles at you. A pod will also appear as a larger alien ship to try and take you out the game"
                            "\nYou are able to shoot the landers and pods to take them out the game, however when shooting the pods they will release spawns"
                            "\nand colliding with them will end the game\n\n"
-                           "\n\nIf either the pod or lander collides with you the game will end."
+                           "\n\nIf either the pod or lander collides with you the game will end. To Win, shoot dowwn 5 landers"
                            "\n\nYou are able to change the direction in which you shoot by using your left and right arrows.\n\nPress Enter to play or Esc to close game");
         sf::FloatRect size = _text.getGlobalBounds();
         _text.setOrigin(size.width / 2, size.height / 2);
@@ -35,7 +35,7 @@ namespace defender
         // Game runs as fast as it can, passing last delta to update()
         while (_window.isOpen())
         {
-            processEvents(); 
+            processEvents();
             lastStep = clock.restart();
             while (lastStep > fixedStep)
             {
@@ -71,12 +71,19 @@ namespace defender
                     if (event.key.code == sf::Keyboard::Escape)
                         _window.close();
                     if (Setup::isGameOver() && event.key.code == sf::Keyboard::Enter)
-                        // DO FOR isGameWon();
+                        reset();
+                        _text.setString("Your current score: " + std::to_string(Setup::_score) + "\t\t\Your high score:" + std::to_string(Setup::_highScore) + "\n\nYou lost!!! You have been destroyed by an entity\nTo start a new game select 'Enter'. To end game select 'ESC'");
+                        _text.setPosition(1000, 400);
+
+                    if (Setup::isGameWon() && event.key.code == sf::Keyboard::Enter)
                         reset();
                 default:
                     break;
             }
             if (!Setup::isGameOver() && Setup::player != nullptr)
+                Setup::player->processEvent(event);
+
+            if (!Setup::isGameWon() && Setup::player != nullptr)
                 Setup::player->processEvent(event);
         }
         if (!Setup::isGameOver() && Setup::player != nullptr)
@@ -97,24 +104,10 @@ namespace defender
             }
             _nextLander -= deltaTime;
 
-            if (_nextLander < sf::Time::Zero && Setup::maxLanders > 0)
+            if (_nextLander < sf::Time::Zero && Setup::maxLanders != 0)
             {
-                int sm = Setup::maxLanders;
-                for (int i = 0; i < sm; ++i)
-                {
-                    Lander::newLander(_world);
-                    Setup::maxLanders--;
-                }
                 Lander::newLander(_world);
-                _nextLander = sf::seconds(Utilities::random(10.f, 60.f - Setup::level * 2));
-            }
-
-            if (_world.size() <= 1)
-            {
-                ++Setup::level;
-    
-                Setup::lives = -1;  // ~ use GameWon Splash Screen implementation
-                initLevel();
+                _nextLander = sf::seconds(Utilities::random(10.f, 60.f - Setup::level * 1));
             }
         }
     }
@@ -124,19 +117,28 @@ namespace defender
         _window.clear();
 
         if (Setup::isGameOver())
-            _window.draw(_text);
-        else
         {
-            _window.draw(_world);
-            Setup::draw(_window);
+            _window.draw(_text);
         }
+        if (Setup::isGameWon()){
+            _text.setString("Your current score: " + std::to_string(Setup::_score) + "\t\t\Your high score:" + std::to_string(Setup::_highScore) + "\n\nVictory !!! You have shot down all five landers\nTo start a new game select 'Enter'. To end game select 'ESC'");
+            _text.setPosition(1000, 400);
+            _window.draw(_text);
+        }
+        else if(!Setup::isGameOver() && !Setup::isGameWon())
+        {
+            Setup::draw(_window);
 
+            _window.draw(_world);
+
+        }
+        //Setup::draw(_window);
         _window.display();
     }
 
     void Game::reset()
     {
-        _nextLander = sf::seconds(Utilities::random(5.f, 6.f - Setup::level * 2));
+        _nextLander = sf::seconds(Utilities::random(1.f, 1.f - Setup::level * 2));
         _world.clear();
         Setup::player = nullptr;
         Setup::reset();

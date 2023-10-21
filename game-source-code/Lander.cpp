@@ -12,11 +12,10 @@ namespace defender
 
     bool Lander::isCollide(const Entity &other) const
     {
-        return dynamic_cast<const ShootLander *>(&other) == nullptr && Collision::circleTest(_sprite, other._sprite);
-        //return dynamic_cast<const ShootLander *>(&other) == nullptr && Collision::circleTest(_sprite, other._sprite);
-        if(dynamic_cast<const Pod*>(&other) == nullptr) {
-        return Collision::circleTest(_sprite,other._sprite);
-        }
+        if(dynamic_cast<const Enemy *>(&other) == nullptr && dynamic_cast<const ShootLander *>(&other) == nullptr) {
+         return Collision::circleTest(_sprite,other._sprite);
+         }
+        return false;
 
     }
 
@@ -64,6 +63,7 @@ namespace defender
     {
         Enemy::onDestroy();
         Setup::maxLanders--;
+        newLander(_world);
     }
 
     // This function will randomly create a Lander depending on the player's score and add it to the world

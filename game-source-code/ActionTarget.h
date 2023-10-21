@@ -1,7 +1,7 @@
 /**
  * @file ActionTarget.h
  *
- * Defines the ActionTarget class template.
+ * @brief Defines the ActionTarget class template.
  */
 #ifndef ACTIONTARGET_H
 #define ACTIONTARGET_H
@@ -69,4 +69,4 @@ namespace defender
     };
 }
 
-#endif
+#endif // class adapted from iZastic on 27/09/2023, Created on 11/8/2015.

@@ -12,10 +12,9 @@ namespace defender
 {
     bool Pod::isCollide(const Entity &other) const
     {
-        if(dynamic_cast<const Pod*>(&other) == nullptr) {
+        if(dynamic_cast<const Enemy*>(&other) == nullptr && dynamic_cast<const ShootLander *>(&other) == nullptr) {
         return Collision::circleTest(_sprite,other._sprite);
         }
-        //return dynamic_cast<const ShootLander *>(&other) == nullptr && Collision::circleTest(_sprite, other._sprite);
         return false;
     }
 
@@ -53,12 +52,13 @@ namespace defender
     void BigPod::onDestroy()
     {
         Pod::onDestroy();
-        int sm = 4; // Number of Swarmers to spawn
+        int sm = 3; // Number of Swarmers to spawn
 
         for (int i = 0; i < sm; ++i)
         {
             Swarmer *swarmer = new Swarmer(_world);
-            swarmer->setPosition(getPosition());
+            swarmer->setPosition(Utilities::random(0, 1) * _world.getWidth(),
+                         Utilities::random(0.f, (float) _world.getHeight()));
             _world.add(swarmer);
         }
     }
@@ -77,29 +77,25 @@ namespace defender
 
     void Swarmer::update(sf::Time deltaTime)
     {
-        int noSwarm = Setup::swarmersKilled;
-        if(noSwarm == 0){
-            float seconds = deltaTime.asSeconds();
-            _sprite.move(seconds * _impulse);
-            _sprite.rotate(_rotation);
-        }
-        else{
-            if (Setup::player) {
-            sf::Vector2f playerPosition = Setup::player->getPosition();
-            sf::Vector2f direction = playerPosition - _sprite.getPosition();
-            float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
+        if(Setup::player)
+        {
+            int noSwarm = Setup::swarmersKilled;
 
-            if (length != 0) {
-                direction /= length;
+                float seconds = deltaTime.asSeconds();
+                _sprite.rotate(_rotation);
+                sf::Vector2f playerPosition = Setup::player->getPosition();
+                sf::Vector2f direction = playerPosition - _sprite.getPosition();
+                float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
+
+                if (length != 0)
+                {
+                    direction /= length;
+                }
+
+                float speed= 350.f;
+                // Move the Pod towards the Player
+                _sprite.move(direction * speed * deltaTime.asSeconds());
             }
-
-            float speed= 500.f;
-            // Move the Pod towards the Player
-            _sprite.move(direction * speed * deltaTime.asSeconds());
-            }
-        }
-
-        
     }
 
     int Swarmer::getPoints() const

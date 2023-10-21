@@ -89,8 +89,8 @@ namespace defender
          * @brief Resets game variables to default values.
          */
         static void reset();
-
         static bool isGameOver();
+        static bool isGameWon();
         /**
          * @brief Adds score to the player's total score.
          * @param s Score to be added.
@@ -108,6 +108,7 @@ namespace defender
 
         static void draw(sf::RenderTarget &target);
         static int _score;
+        static int _highScore;
         // ... public member functions and variables ...
 
     private:
@@ -123,7 +124,6 @@ namespace defender
          */
         static void initTextures();
 
-        static int _highScore;
 
         /**
          * @brief Initializes player input mappings for the game.

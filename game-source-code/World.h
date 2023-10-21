@@ -1,7 +1,7 @@
 /**
  * @file World.h
  *
- * Defines the game world and handles entities within it.
+ * @brief Defines the game world and handles entities within it.
  */
 #ifndef WORLD_H
 #define WORLD_H
@@ -71,7 +71,6 @@ namespace defender
          * @brief Updates the world based on the elapsed time.
          * @param deltaTime Time passed since the last update.
          */
-
         const std::list<Entity *> getEntities() const;
         int getWidth() const;
         int getHeight() const;
@@ -103,7 +102,5 @@ namespace defender
         virtual void draw(sf::RenderTarget &target, sf::RenderStates) const override;
 
     };
-    };
-
-
+}
 #endif

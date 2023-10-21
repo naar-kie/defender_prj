@@ -70,7 +70,6 @@ namespace defender
         }
     }
 
-
     // This method updates the position and the rotation of a Player
     void Player::update(sf::Time deltaTime)
     {
@@ -86,14 +85,12 @@ namespace defender
         movement.x = 0, movement.y = 0;
     }
 
-
     // this method ends the Game when the player dies
     void Player::onDestroy(){
         Entity::onDestroy();
         Setup::lives--;
         Setup::player = nullptr;
     }
-
 
     void Player::draw(sf::RenderTarget &target, sf::RenderStates states) const{
         Entity::draw(target, states);

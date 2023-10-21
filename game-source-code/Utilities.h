@@ -1,7 +1,7 @@
 /**
  * @file Utilities.h
  *
- * Provides utility functions for the game.
+ * @brief Provides utility functions for the game.
  */
 #ifndef UTILITIES_H
 #define UTILITIES_H
@@ -51,4 +51,4 @@ namespace defender
     };
 }
 
-#endif
+#endif // class adapted from iZastic, Created on 11/8/2015.
